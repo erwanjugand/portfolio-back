@@ -1,0 +1,7 @@
+easy_admin:
+   entities:
+       - App\Entity\User
+       - App\Entity\Skill
+       - App\Entity\Work
+       - App\Entity\WorkFilter
+       - App\Entity\Experience
