@@ -1,7 +1,23 @@
 easy_admin:
-   entities:
-       - App\Entity\User
-       - App\Entity\Skill
-       - App\Entity\Work
-       - App\Entity\WorkFilter
-       - App\Entity\Experience
+    site_name: 'Administration'
+    user:
+        name_property_path: 'username'
+    entities:
+        User:
+            class: App\Entity\User
+
+        Skill:
+            class: App\Entity\Skill
+
+        WorkFilter:
+            class: App\Entity\WorkFilter
+
+        Experience:
+            class: App\Entity\Experience
+
+        work:
+            class: App\Entity\Work
+            form:
+                fields:
+                    - { property: 'title', type: 'text' }
+
