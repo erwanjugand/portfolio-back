@@ -1,8 +1,13 @@
 <?php
+
 namespace App\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
@@ -26,6 +31,36 @@ class User implements UserInterface
    * @ORM\Column(type="string")
    */
   private $password;
+
+  /**
+   * @Gedmo\Timestampable(on="create")
+   * @ORM\Column(type="datetime")
+   */
+  private $created;
+
+  /**
+   * @Gedmo\Timestampable(on="update")
+   * @ORM\Column(type="datetime")
+   */
+  private $updated;
+
+  /**
+   * @ORM\PrePersist
+   */
+  public function CreatedUser()
+  {
+      $this->created = new \DateTime();
+      $this->updated = new \DateTime();
+  }
+
+  /**
+   * @ORM\PreUpdate
+   */
+  public function UpdatedUser()
+  {
+      $this->updated = new \DateTime();
+  }
+
   public function getId(): ?int
   {
     return $this->id;
@@ -89,5 +124,29 @@ class User implements UserInterface
   {
     // If you store any temporary, sensitive data on the user, clear it here
     // $this->plainPassword = null;
+  }
+
+  public function getCreated(): ?\DateTimeInterface
+  {
+      return $this->created;
+  }
+
+  public function setCreated(\DateTimeInterface $created): self
+  {
+      $this->created = $created;
+
+      return $this;
+  }
+
+  public function getUpdated(): ?\DateTimeInterface
+  {
+      return $this->updated;
+  }
+
+  public function setUpdated(\DateTimeInterface $updated): self
+  {
+      $this->updated = $updated;
+
+      return $this;
   }
 }

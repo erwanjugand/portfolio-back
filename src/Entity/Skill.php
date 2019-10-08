@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
+ * @ORM\HasLifecycleCallbacks()
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\SkillRepository")
  */
@@ -27,6 +29,35 @@ class Skill
      * @ORM\Column(type="integer")
      */
     private $level;
+
+    /**
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    private $created;
+
+    /**
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     */
+    private $updated;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function CreatedSkill()
+    {
+        $this->created = new \DateTime();
+        $this->updated = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function UpdatedSkill()
+    {
+        $this->updated = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -53,6 +84,30 @@ class Skill
     public function setLevel(int $level): self
     {
         $this->level = $level;
+
+        return $this;
+    }
+
+    public function getCreated(): ?\DateTimeInterface
+    {
+        return $this->created;
+    }
+
+    public function setCreated(\DateTimeInterface $created): self
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    public function getUpdated(): ?\DateTimeInterface
+    {
+        return $this->updated;
+    }
+
+    public function setUpdated(\DateTimeInterface $updated): self
+    {
+        $this->updated = $updated;
 
         return $this;
     }

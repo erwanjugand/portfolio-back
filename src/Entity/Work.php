@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\HasLifecycleCallbacks()
@@ -25,9 +26,43 @@ class Work
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=1023)
      */
-    private $url;
+    private $description;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateRealization;
+
+    /**
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    private $created;
+
+    /**
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     */
+    private $updated;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function CreatedWork()
+    {
+        $this->created = new \DateTime();
+        $this->updated = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function UpdatedWork()
+    {
+        $this->updated = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -46,35 +81,51 @@ class Work
         return $this;
     }
 
-    public function getUrl(): ?string
+    public function getDescription(): ?string
     {
-        return $this->url;
+        return $this->description;
     }
 
-    public function setUrl(string $url): self
+    public function setDescription(string $description): self
     {
-        $this->url = $url;
+        $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function CreatedWork()
+    public function getDateRealization(): ?\DateTimeInterface
     {
-        $url = str_replace("'", '-',str_replace('"', '',wordwrap(strtolower($this->title), 1, '-', 0)));
-        $url = strtr(utf8_decode($url), utf8_decode('àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
-        $this->url = $url;
+        return $this->dateRealization;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
-    public function UpdatedWork()
+    public function setDateRealization(\DateTimeInterface $dateRealization): self
     {
-        $url = str_replace("'", '-',str_replace('"', '',wordwrap(strtolower($this->title), 1, '-', 0)));
-        $url = strtr(utf8_decode($url), utf8_decode('àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
-        $this->url = $url;
+        $this->dateRealization = $dateRealization;
+
+        return $this;
+    }
+
+    public function getCreated(): ?\DateTimeInterface
+    {
+        return $this->created;
+    }
+
+    public function setCreated(\DateTimeInterface $created): self
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    public function getUpdated(): ?\DateTimeInterface
+    {
+        return $this->updated;
+    }
+
+    public function setUpdated(\DateTimeInterface $updated): self
+    {
+        $this->updated = $updated;
+
+        return $this;
     }
 }

@@ -5,19 +5,36 @@ easy_admin:
     entities:
         User:
             class: App\Entity\User
+            form:
+                fields:
+                    - { property: 'email', type: 'email' }
+                    - { property: 'password', type: 'password' }
 
         Skill:
             class: App\Entity\Skill
+            form:
+                fields:
+                    - { property: 'name', type: 'text' }
+                    - { property: 'level', type: 'integer' }
 
         WorkFilter:
             class: App\Entity\WorkFilter
+            form:
+                fields:
+                    - { property: 'name', type: 'text' }
 
         Experience:
             class: App\Entity\Experience
+            form:
+                fields:
+                    - { property: 'name', type: 'text' }
+                    - { property: 'description', type: 'text' }
 
         work:
             class: App\Entity\Work
             form:
                 fields:
                     - { property: 'title', type: 'text' }
+                    - { property: 'description', type: 'text' }
+                    - { property: 'dateRealization', type: 'datetime' }
 
