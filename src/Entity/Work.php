@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\HasLifecycleCallbacks()
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"work"}})
  * @ORM\Entity(repositoryClass="App\Repository\WorkRepository")
  */
 class Work
@@ -17,21 +20,25 @@ class Work
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("filter")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("work")
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=1023)
+     * @Groups("work")
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("work")
      */
     private $dateRealization;
 
@@ -44,8 +51,24 @@ class Work
     /**
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
+     * @Groups("work")
      */
     private $updated;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\WorkFilter", inversedBy="works")
+     * @Groups("work")
+     */
+    private $filters;
+
+    public function __toString() {
+        return $this->title;
+    }
+
+    public function __construct()
+    {
+        $this->filters = new ArrayCollection();
+    }
 
     /**
      * @ORM\PrePersist
@@ -125,6 +148,32 @@ class Work
     public function setUpdated(\DateTimeInterface $updated): self
     {
         $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|WorkFilter[]
+     */
+    public function getFilters(): Collection
+    {
+        return $this->filters;
+    }
+
+    public function addFilter(WorkFilter $filter): self
+    {
+        if (!$this->filters->contains($filter)) {
+            $this->filters[] = $filter;
+        }
+
+        return $this;
+    }
+
+    public function removeFilter(WorkFilter $filter): self
+    {
+        if ($this->filters->contains($filter)) {
+            $this->filters->removeElement($filter);
+        }
 
         return $this;
     }

@@ -5,10 +5,11 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\HasLifecycleCallbacks()
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"experience"}})
  * @ORM\Entity(repositoryClass="App\Repository\ExperienceRepository")
  */
 class Experience
@@ -22,6 +23,7 @@ class Experience
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("experience")
      */
     private $name;
 
@@ -39,11 +41,13 @@ class Experience
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("experience")
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("experience")
      */
     private $dateRealization;
 

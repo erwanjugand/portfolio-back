@@ -5,10 +5,11 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\HasLifecycleCallbacks()
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"skill"}})
  * @ORM\Entity(repositoryClass="App\Repository\SkillRepository")
  */
 class Skill
@@ -22,11 +23,13 @@ class Skill
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("skill")
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("skill")
      */
     private $level;
 
