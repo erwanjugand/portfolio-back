@@ -40,3 +40,12 @@ easy_admin:
                     - filters
                     - dateRealization
 
+        page:
+            class: App\Entity\Page
+            form:
+                fields:
+                    - name
+                    - metaTitle
+                    - metaDescription
+                    - data
+
