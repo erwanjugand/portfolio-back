@@ -28,7 +28,7 @@ easy_admin:
             form:
                 fields:
                     - name
-                    - description
+                     - { property: 'description', type: 'text-editor' }
                     - dateRealization
 
         work:
@@ -36,9 +36,18 @@ easy_admin:
             form:
                 fields:
                     - title
-                    - description
+                    - { property: 'description', type: 'text-editor' }
                     - filters
                     - dateRealization
+
+        version:
+            class: App\Entity\Version
+            form:
+                fields:
+                    - name
+                    - date
+                    - { property: 'description', type: 'text-editor' }
+
 
         page:
             class: App\Entity\Page
