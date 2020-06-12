@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Repository\VersionTagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,10 +12,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\HasLifecycleCallbacks()
- * @ApiResource(attributes={"order"={"date": "DESC"}}, normalizationContext={"groups"={"version"}})
- * @ORM\Entity(repositoryClass="App\Repository\VersionRepository")
+ * @ApiResource()
+ * @ORM\Entity(repositoryClass=VersionTagRepository::class)
  */
-class Version
+class VersionTag
 {
     /**
      * @ORM\Id()
@@ -31,16 +32,10 @@ class Version
     private $name;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string", length=255)
      * @Groups("version")
      */
-    private $date;
-
-    /**
-     * @ORM\Column(type="text")
-     * @Groups("version")
-     */
-    private $description;
+    private $color;
 
     /**
      * @Gedmo\Timestampable(on="create")
@@ -55,16 +50,9 @@ class Version
     private $updated;
 
     /**
-     * @ORM\ManyToMany(targetEntity=VersionTag::class, inversedBy="versions")
-     * @Groups("version")
+     * @ORM\ManyToMany(targetEntity=Version::class, mappedBy="tags")
      */
-    private $tags;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @Groups("version")
-     */
-    private $major;
+    private $versions;
 
     public function __toString() {
         return $this->name;
@@ -72,13 +60,13 @@ class Version
 
     public function __construct()
     {
-        $this->tags = new ArrayCollection();
+        $this->versions = new ArrayCollection();
     }
 
     /**
      * @ORM\PrePersist
      */
-    public function CreatedVersion()
+    public function CreatedVersionTag()
     {
         $this->created = new \DateTime();
         $this->updated = new \DateTime();
@@ -87,7 +75,7 @@ class Version
     /**
      * @ORM\PreUpdate
      */
-    public function UpdatedVersion()
+    public function UpdatedVersionTag()
     {
         $this->updated = new \DateTime();
     }
@@ -109,26 +97,14 @@ class Version
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getColor(): ?string
     {
-        return $this->date;
+        return $this->color;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setColor(string $color): self
     {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
+        $this->color = $color;
 
         return $this;
     }
@@ -158,39 +134,29 @@ class Version
     }
 
     /**
-     * @return Collection|VersionTag[]
+     * @return Collection|Version[]
      */
-    public function getTags(): Collection
+    public function getVersions(): Collection
     {
-        return $this->tags;
+        return $this->versions;
     }
 
-    public function addTag(VersionTag $tag): self
+    public function addVersion(Version $version): self
     {
-        if (!$this->tags->contains($tag)) {
-            $this->tags[] = $tag;
+        if (!$this->versions->contains($version)) {
+            $this->versions[] = $version;
+            $version->addTag($this);
         }
 
         return $this;
     }
 
-    public function removeTag(VersionTag $tag): self
+    public function removeVersion(Version $version): self
     {
-        if ($this->tags->contains($tag)) {
-            $this->tags->removeElement($tag);
+        if ($this->versions->contains($version)) {
+            $this->versions->removeElement($version);
+            $version->removeTag($this);
         }
-
-        return $this;
-    }
-
-    public function getMajor(): ?bool
-    {
-        return $this->major;
-    }
-
-    public function setMajor(bool $major): self
-    {
-        $this->major = $major;
 
         return $this;
     }

@@ -28,7 +28,7 @@ easy_admin:
             form:
                 fields:
                     - name
-                     - { property: 'description', type: 'text-editor' }
+                    - { property: 'description', type: 'text-editor' }
                     - dateRealization
 
         work:
@@ -46,7 +46,16 @@ easy_admin:
                 fields:
                     - name
                     - date
+                    - major
                     - { property: 'description', type: 'text-editor' }
+                    - tags
+
+        VersionTag:
+            class: App\Entity\VersionTag
+            form:
+                fields:
+                    - name
+                    - { property: 'color', type: 'color' }
 
 
         page:
