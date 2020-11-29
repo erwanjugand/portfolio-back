@@ -29,6 +29,7 @@ easy_admin:
                 fields:
                     - name
                     - { property: 'description', type: 'text-editor' }
+                    - contract
                     - dateRealization
 
         work:

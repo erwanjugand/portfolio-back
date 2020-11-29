@@ -18,6 +18,7 @@ class Experience
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("experience")
      */
     private $id;
 
@@ -50,6 +51,12 @@ class Experience
      * @Groups("experience")
      */
     private $dateRealization;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("experience")
+     */
+    private $contract;
 
     /**
      * @ORM\PrePersist
@@ -130,6 +137,18 @@ class Experience
     public function setDateRealization(\DateTimeInterface $dateRealization): self
     {
         $this->dateRealization = $dateRealization;
+
+        return $this;
+    }
+
+    public function getContract(): ?string
+    {
+        return $this->contract;
+    }
+
+    public function setContract(string $contract): self
+    {
+        $this->contract = $contract;
 
         return $this;
     }
